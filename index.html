@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keyboard Tester</title>
+    <title>Advanced Keyboard Tester</title>
     <style>
         * {
             margin: 0;
@@ -13,14 +13,14 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
             color: #fff;
             min-height: 100vh;
             padding: 20px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -29,14 +29,25 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         h1 {
-            font-size: 2em;
+            font-size: 2.2em;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .reset-btn {
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
             padding: 10px 20px;
             background: #334155;
             border: none;
@@ -44,11 +55,50 @@
             color: #fff;
             cursor: pointer;
             font-size: 14px;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            font-weight: 500;
         }
 
-        .reset-btn:hover {
+        .btn:hover {
             background: #475569;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 1px solid #475569;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .info-box {
@@ -62,34 +112,41 @@
         .info-box h2 {
             color: #60a5fa;
             margin-bottom: 15px;
-            font-size: 1.2em;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .key-info {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
         }
 
         .key-info-item {
             background: #0f172a;
-            padding: 10px;
-            border-radius: 6px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
         }
 
         .key-info-label {
             color: #94a3b8;
-            font-size: 12px;
+            font-size: 11px;
             margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .key-info-value {
-            font-family: monospace;
-            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
             font-weight: 600;
+            color: #e2e8f0;
         }
 
-        .keyboard {
+        .keyboard-section {
             background: #1e293b;
             border: 1px solid #334155;
             border-radius: 12px;
@@ -97,48 +154,77 @@
             margin-bottom: 20px;
         }
 
+        .keyboard-title {
+            color: #60a5fa;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
         .keyboard-row {
             display: flex;
-            gap: 5px;
-            margin-bottom: 5px;
+            gap: 4px;
+            margin-bottom: 4px;
             justify-content: center;
         }
 
         .key {
-            min-width: 50px;
-            padding: 15px 10px;
-            background: #334155;
+            min-width: 45px;
+            height: 45px;
+            padding: 8px 6px;
+            background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
             border: 2px solid #475569;
             border-radius: 6px;
             text-align: center;
-            font-family: monospace;
-            font-size: 14px;
-            transition: all 0.1s;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            transition: all 0.15s;
             cursor: default;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .key:hover {
+            background: linear-gradient(135deg, #475569 0%, #334155 100%);
         }
 
         .key.pressed {
-            background: #3b82f6;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             border-color: #60a5fa;
             transform: scale(0.95);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
         }
 
         .key.space {
             flex-grow: 1;
+            min-width: 250px;
         }
 
         .key.wide {
-            min-width: 80px;
+            min-width: 70px;
+        }
+
+        .key.extra-wide {
+            min-width: 90px;
+        }
+
+        .key-label {
+            font-weight: 600;
+            color: #e2e8f0;
         }
 
         .key-count {
             position: absolute;
-            bottom: 2px;
+            bottom: 3px;
             right: 5px;
-            font-size: 10px;
+            font-size: 9px;
             color: #94a3b8;
+            background: rgba(0,0,0,0.3);
+            padding: 1px 4px;
+            border-radius: 3px;
         }
 
         .pressed-keys {
@@ -150,11 +236,13 @@
         }
 
         .pressed-key-badge {
-            padding: 8px 15px;
-            background: #3b82f6;
-            border-radius: 6px;
-            font-family: monospace;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
             font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
         .empty-state {
@@ -166,19 +254,116 @@
             text-align: center;
             color: #94a3b8;
             margin-top: 15px;
-            font-size: 14px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .top-keys {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .top-key-item {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-key-name {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #60a5fa;
+        }
+
+        .top-key-count {
+            background: #334155;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        .test-results {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            margin-top: 15px;
+        }
+
+        .test-results h3 {
+            color: #60a5fa;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .test-item:last-child {
+            border-bottom: none;
+        }
+
+        .test-status-ok {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .test-status-pending {
+            color: #94a3b8;
+        }
+
+        @media (max-width: 768px) {
+            .key {
+                min-width: 35px;
+                height: 35px;
+                font-size: 9px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>⌨️ Keyboard Tester</h1>
-            <button class="reset-btn" onclick="resetAll()">Reset Stats</button>
+            <h1>⌨️ Advanced Keyboard Tester</h1>
+            <div class="controls">
+                <button class="btn" onclick="resetStats()">Reset Stats</button>
+                <button class="btn btn-primary" onclick="exportData()">Export Data</button>
+                <button class="btn" onclick="testAllKeys()">Test Mode</button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalPresses">0</div>
+                <div class="stat-label">Total Presses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="uniqueKeys">0</div>
+                <div class="stat-label">Unique Keys</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="currentlyPressed">0</div>
+                <div class="stat-label">Keys Held</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="sessionTime">0:00</div>
+                <div class="stat-label">Session Time</div>
+            </div>
         </div>
 
         <div id="lastKeyInfo" class="info-box" style="display: none;">
-            <h2>Last Key Pressed</h2>
+            <h2>🎯 Last Key Pressed</h2>
             <div class="key-info">
                 <div class="key-info-item">
                     <div class="key-info-label">Key</div>
@@ -192,46 +377,128 @@
                     <div class="key-info-label">Key Code</div>
                     <div class="key-info-value" id="lastKeyCode">-</div>
                 </div>
+                <div class="key-info-item">
+                    <div class="key-info-label">Which</div>
+                    <div class="key-info-value" id="lastWhich">-</div>
+                </div>
+                <div class="key-info-item">
+                    <div class="key-info-label">Location</div>
+                    <div class="key-info-value" id="lastLocation">-</div>
+                </div>
+                <div class="key-info-item">
+                    <div class="key-info-label">Repeat</div>
+                    <div class="key-info-value" id="lastRepeat">-</div>
+                </div>
+                <div class="key-info-item">
+                    <div class="key-info-label">Alt Key</div>
+                    <div class="key-info-value" id="lastAlt">-</div>
+                </div>
+                <div class="key-info-item">
+                    <div class="key-info-label">Ctrl Key</div>
+                    <div class="key-info-value" id="lastCtrl">-</div>
+                </div>
+                <div class="key-info-item">
+                    <div class="key-info-label">Shift Key</div>
+                    <div class="key-info-value" id="lastShift">-</div>
+                </div>
+                <div class="key-info-item">
+                    <div class="key-info-label">Meta Key</div>
+                    <div class="key-info-value" id="lastMeta">-</div>
+                </div>
             </div>
         </div>
 
-        <div class="keyboard">
-            <h2>Keyboard Layout</h2>
-            <div id="keyboard"></div>
-            <div class="instructions">Press any key to test it. Numbers show how many times pressed.</div>
+        <div class="keyboard-section">
+            <h2 class="keyboard-title">Main Keyboard</h2>
+            <div id="mainKeyboard"></div>
+            <div class="instructions">
+                Press any key to test it • Hold multiple keys for combinations • Numbers show press count<br>
+                All standard keyboard keys are supported including function keys, numpad, and special keys
+            </div>
+        </div>
+
+        <div class="keyboard-section">
+            <h2 class="keyboard-title">Function & Navigation Keys</h2>
+            <div id="functionKeys"></div>
+        </div>
+
+        <div class="keyboard-section">
+            <h2 class="keyboard-title">Numpad</h2>
+            <div id="numpad"></div>
         </div>
 
         <div class="info-box">
-            <h2>Currently Pressed</h2>
+            <h2>🔥 Most Pressed Keys</h2>
+            <div class="top-keys" id="topKeys">
+                <div class="empty-state">Start typing to see statistics...</div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h2>👇 Currently Pressed Keys</h2>
             <div class="pressed-keys" id="pressedKeys">
                 <span class="empty-state">No keys pressed</span>
             </div>
+        </div>
+
+        <div id="testMode" class="info-box" style="display: none;">
+            <h2>🧪 Keyboard Test Mode</h2>
+            <div class="test-results" id="testResults"></div>
         </div>
     </div>
 
     <script>
         var pressedKeys = new Set();
         var keyStats = {};
+        var totalPresses = 0;
+        var sessionStart = Date.now();
+        var testMode = false;
+        var testedKeys = new Set();
 
-        var keyboardLayout = [
+        var mainLayout = [
             ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'],
             ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace'],
             ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash'],
             ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter'],
             ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight'],
-            ['ControlLeft', 'AltLeft', 'MetaLeft', 'Space', 'MetaRight', 'AltRight', 'ControlRight']
+            ['ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'MetaRight', 'ContextMenu', 'ControlRight']
+        ];
+
+        var functionLayout = [
+            ['PrintScreen', 'ScrollLock', 'Pause'],
+            ['Insert', 'Home', 'PageUp'],
+            ['Delete', 'End', 'PageDown'],
+            ['ArrowUp'],
+            ['ArrowLeft', 'ArrowDown', 'ArrowRight']
+        ];
+
+        var numpadLayout = [
+            ['NumLock', 'NumpadDivide', 'NumpadMultiply', 'NumpadSubtract'],
+            ['Numpad7', 'Numpad8', 'Numpad9', 'NumpadAdd'],
+            ['Numpad4', 'Numpad5', 'Numpad6'],
+            ['Numpad1', 'Numpad2', 'Numpad3', 'NumpadEnter'],
+            ['Numpad0', 'NumpadDecimal']
         ];
 
         var keyLabels = {
             'Backquote': '`', 'Digit1': '1', 'Digit2': '2', 'Digit3': '3', 'Digit4': '4',
             'Digit5': '5', 'Digit6': '6', 'Digit7': '7', 'Digit8': '8', 'Digit9': '9',
-            'Digit0': '0', 'Minus': '-', 'Equal': '=', 'Backspace': 'Backspace',
-            'Tab': 'Tab', 'CapsLock': 'Caps', 'Enter': 'Enter', 'ShiftLeft': 'Shift',
-            'ShiftRight': 'Shift', 'ControlLeft': 'Ctrl', 'ControlRight': 'Ctrl',
-            'AltLeft': 'Alt', 'AltRight': 'Alt', 'MetaLeft': 'Win', 'MetaRight': 'Win',
+            'Digit0': '0', 'Minus': '-', 'Equal': '=', 'Backspace': '⌫ Back',
+            'Tab': '↹ Tab', 'CapsLock': '⇪ Caps', 'Enter': '↵ Enter', 'ShiftLeft': '⇧ Shift',
+            'ShiftRight': '⇧ Shift', 'ControlLeft': 'Ctrl', 'ControlRight': 'Ctrl',
+            'AltLeft': 'Alt', 'AltRight': 'Alt', 'MetaLeft': '⊞ Win', 'MetaRight': '⊞ Win',
             'Space': 'Space', 'Escape': 'Esc', 'BracketLeft': '[', 'BracketRight': ']',
             'Backslash': '\\', 'Semicolon': ';', 'Quote': "'", 'Comma': ',',
-            'Period': '.', 'Slash': '/'
+            'Period': '.', 'Slash': '/', 'ContextMenu': '☰ Menu',
+            'ArrowUp': '↑', 'ArrowDown': '↓', 'ArrowLeft': '←', 'ArrowRight': '→',
+            'PageUp': 'PgUp', 'PageDown': 'PgDn', 'PrintScreen': 'PrtSc',
+            'ScrollLock': 'ScrLk', 'Pause': 'Pause', 'Insert': 'Ins',
+            'Delete': 'Del', 'Home': 'Home', 'End': 'End',
+            'NumLock': 'NumLk', 'NumpadDivide': '/', 'NumpadMultiply': '*',
+            'NumpadSubtract': '-', 'NumpadAdd': '+', 'NumpadEnter': 'Enter',
+            'NumpadDecimal': '.', 'Numpad0': '0', 'Numpad1': '1', 'Numpad2': '2',
+            'Numpad3': '3', 'Numpad4': '4', 'Numpad5': '5', 'Numpad6': '6',
+            'Numpad7': '7', 'Numpad8': '8', 'Numpad9': '9'
         };
 
         function getKeyLabel(code) {
@@ -247,33 +514,94 @@
             return code;
         }
 
-        function buildKeyboard() {
-            var kb = document.getElementById('keyboard');
-            kb.innerHTML = '';
+        function createKey(keyCode) {
+            var key = document.createElement('div');
+            key.className = 'key';
+            key.id = 'key-' + keyCode;
 
-            for (var i = 0; i < keyboardLayout.length; i++) {
+            if (keyCode === 'Space') {
+                key.className += ' space';
+            } else if (['Backspace', 'Tab', 'CapsLock', 'Enter', 'ShiftLeft', 'ShiftRight'].indexOf(keyCode) !== -1) {
+                key.className += ' wide';
+            } else if (['NumpadEnter', 'NumpadAdd', 'Numpad0'].indexOf(keyCode) !== -1) {
+                key.className += ' extra-wide';
+            }
+
+            var label = document.createElement('div');
+            label.className = 'key-label';
+            label.textContent = getKeyLabel(keyCode);
+            key.appendChild(label);
+
+            var count = document.createElement('div');
+            count.className = 'key-count';
+            count.id = 'count-' + keyCode;
+            key.appendChild(count);
+
+            return key;
+        }
+
+        function buildKeyboard() {
+            var mainKb = document.getElementById('mainKeyboard');
+            mainKb.innerHTML = '';
+            mainLayout.forEach(function(rowKeys) {
                 var row = document.createElement('div');
                 row.className = 'keyboard-row';
+                rowKeys.forEach(function(keyCode) {
+                    row.appendChild(createKey(keyCode));
+                });
+                mainKb.appendChild(row);
+            });
 
-                for (var j = 0; j < keyboardLayout[i].length; j++) {
-                    var keyCode = keyboardLayout[i][j];
-                    var key = document.createElement('div');
-                    key.className = 'key';
-                    key.id = 'key-' + keyCode;
+            var funcKb = document.getElementById('functionKeys');
+            funcKb.innerHTML = '';
+            functionLayout.forEach(function(rowKeys) {
+                var row = document.createElement('div');
+                row.className = 'keyboard-row';
+                rowKeys.forEach(function(keyCode) {
+                    row.appendChild(createKey(keyCode));
+                });
+                funcKb.appendChild(row);
+            });
 
-                    if (keyCode === 'Space') {
-                        key.className += ' space';
-                    }
-                    if (['Backspace', 'Tab', 'CapsLock', 'Enter', 'ShiftLeft', 'ShiftRight'].indexOf(keyCode) !== -1) {
-                        key.className += ' wide';
-                    }
+            var numKb = document.getElementById('numpad');
+            numKb.innerHTML = '';
+            numpadLayout.forEach(function(rowKeys) {
+                var row = document.createElement('div');
+                row.className = 'keyboard-row';
+                rowKeys.forEach(function(keyCode) {
+                    row.appendChild(createKey(keyCode));
+                });
+                numKb.appendChild(row);
+            });
+        }
 
-                    key.innerHTML = '<div>' + getKeyLabel(keyCode) + '</div><div class="key-count" id="count-' + keyCode + '"></div>';
-                    row.appendChild(key);
-                }
+        function updateStats() {
+            document.getElementById('totalPresses').textContent = totalPresses;
+            document.getElementById('uniqueKeys').textContent = Object.keys(keyStats).length;
+            document.getElementById('currentlyPressed').textContent = pressedKeys.size;
 
-                kb.appendChild(row);
+            var elapsed = Math.floor((Date.now() - sessionStart) / 1000);
+            var mins = Math.floor(elapsed / 60);
+            var secs = elapsed % 60;
+            document.getElementById('sessionTime').textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+
+        function updateTopKeys() {
+            var container = document.getElementById('topKeys');
+            var sorted = Object.entries(keyStats).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 10);
+
+            if (sorted.length === 0) {
+                container.innerHTML = '<div class="empty-state">Start typing to see statistics...</div>';
+                return;
             }
+
+            container.innerHTML = '';
+            sorted.forEach(function(entry) {
+                var item = document.createElement('div');
+                item.className = 'top-key-item';
+                item.innerHTML = '<span class="top-key-name">' + getKeyLabel(entry[0]) + '</span><span class="top-key-count">' + entry[1] + '</span>';
+                container.appendChild(item);
+            });
         }
 
         function updatePressedDisplay() {
@@ -293,33 +621,47 @@
         }
 
         function handleKeyDown(e) {
-            e.preventDefault();
             var code = e.code || e.key;
 
-            pressedKeys.add(code);
-            keyStats[code] = (keyStats[code] || 0) + 1;
+            if (!pressedKeys.has(code)) {
+                pressedKeys.add(code);
+                keyStats[code] = (keyStats[code] || 0) + 1;
+                totalPresses++;
 
-            document.getElementById('lastKeyInfo').style.display = 'block';
-            document.getElementById('lastKey').textContent = e.key;
-            document.getElementById('lastCode').textContent = e.code;
-            document.getElementById('lastKeyCode').textContent = e.keyCode;
+                document.getElementById('lastKeyInfo').style.display = 'block';
+                document.getElementById('lastKey').textContent = e.key;
+                document.getElementById('lastCode').textContent = e.code || 'N/A';
+                document.getElementById('lastKeyCode').textContent = e.keyCode;
+                document.getElementById('lastWhich').textContent = e.which;
+                document.getElementById('lastLocation').textContent = e.location;
+                document.getElementById('lastRepeat').textContent = e.repeat ? 'Yes' : 'No';
+                document.getElementById('lastAlt').textContent = e.altKey ? 'Yes' : 'No';
+                document.getElementById('lastCtrl').textContent = e.ctrlKey ? 'Yes' : 'No';
+                document.getElementById('lastShift').textContent = e.shiftKey ? 'Yes' : 'No';
+                document.getElementById('lastMeta').textContent = e.metaKey ? 'Yes' : 'No';
 
-            var keyEl = document.getElementById('key-' + code);
-            if (keyEl) {
-                keyEl.classList.add('pressed');
-                var countEl = document.getElementById('count-' + code);
-                if (countEl) {
-                    countEl.textContent = keyStats[code];
+                var keyEl = document.getElementById('key-' + code);
+                if (keyEl) {
+                    keyEl.classList.add('pressed');
+                    var countEl = document.getElementById('count-' + code);
+                    if (countEl) {
+                        countEl.textContent = keyStats[code];
+                    }
                 }
-            }
 
-            updatePressedDisplay();
+                if (testMode) {
+                    testedKeys.add(code);
+                    updateTestResults();
+                }
+
+                updateStats();
+                updateTopKeys();
+                updatePressedDisplay();
+            }
         }
 
         function handleKeyUp(e) {
-            e.preventDefault();
             var code = e.code || e.key;
-
             pressedKeys.delete(code);
 
             var keyEl = document.getElementById('key-' + code);
@@ -327,21 +669,80 @@
                 keyEl.classList.remove('pressed');
             }
 
+            updateStats();
             updatePressedDisplay();
         }
 
-        function resetAll() {
-            keyStats = {};
-            var counts = document.querySelectorAll('.key-count');
-            for (var i = 0; i < counts.length; i++) {
-                counts[i].textContent = '';
+        function resetStats() {
+            if (confirm('Reset all statistics?')) {
+                keyStats = {};
+                totalPresses = 0;
+                sessionStart = Date.now();
+                testedKeys.clear();
+                
+                var counts = document.querySelectorAll('.key-count');
+                for (var i = 0; i < counts.length; i++) {
+                    counts[i].textContent = '';
+                }
+                
+                document.getElementById('lastKeyInfo').style.display = 'none';
+                updateStats();
+                updateTopKeys();
             }
-            document.getElementById('lastKeyInfo').style.display = 'none';
+        }
+
+        function exportData() {
+            var data = {
+                timestamp: new Date().toISOString(),
+                totalPresses: totalPresses,
+                uniqueKeys: Object.keys(keyStats).length,
+                sessionDuration: Math.floor((Date.now() - sessionStart) / 1000),
+                keyStatistics: keyStats
+            };
+
+            var blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'keyboard-test-data.json';
+            a.click();
+        }
+
+        function testAllKeys() {
+            testMode = !testMode;
+            var testDiv = document.getElementById('testMode');
+            
+            if (testMode) {
+                testDiv.style.display = 'block';
+                testedKeys.clear();
+                updateTestResults();
+            } else {
+                testDiv.style.display = 'none';
+            }
+        }
+
+        function updateTestResults() {
+            var allKeys = [];
+            mainLayout.forEach(function(row) { allKeys = allKeys.concat(row); });
+            functionLayout.forEach(function(row) { allKeys = allKeys.concat(row); });
+            numpadLayout.forEach(function(row) { allKeys = allKeys.concat(row); });
+
+            var results = document.getElementById('testResults');
+            results.innerHTML = '<h3>Progress: ' + testedKeys.size + ' / ' + allKeys.length + ' keys tested</h3>';
+
+            allKeys.forEach(function(key) {
+                var item = document.createElement('div');
+                item.className = 'test-item';
+                var status = testedKeys.has(key) ? '<span class="test-status-ok">✓ Tested</span>' : '<span class="test-status-pending">○ Not tested</span>';
+                item.innerHTML = '<span>' + getKeyLabel(key) + '</span>' + status;
+                results.appendChild(item);
+            });
         }
 
         buildKeyboard();
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
+        setInterval(updateStats, 1000);
     </script>
 </body>
 </html>
